@@ -28,15 +28,22 @@ let cvData = {
 };
 
 let showPreview = true;
+let saveTimeout = null;
+
+// Constantes para localStorage
+const STORAGE_KEY = 'cvMakerData';
+const STORAGE_STYLES_KEY = 'cvMakerStyles';
 
 // Inicialización
 document.addEventListener('DOMContentLoaded', () => {
+    loadFromStorage();
     initializeInputs();
     renderExperiencia();
     renderEducacion();
     renderHabilidades();
     renderPreview();
     setupEventListeners();
+    createSaveIndicator();
 });
 
 // Configurar event listeners
@@ -48,6 +55,7 @@ function setupEventListeners() {
             element.addEventListener('input', (e) => {
                 cvData[field] = e.target.value;
                 renderPreview();
+                saveToStorage();
             });
         }
     });
@@ -69,6 +77,7 @@ function setupStyleControls() {
         const value = e.target.value + 'rem';
         document.documentElement.style.setProperty('--cv-name-size', value);
         document.getElementById('nameSizeValue').textContent = value;
+        saveStylesToStorage();
     });
 
     titleSize.addEventListener('input', (e) => {
@@ -76,6 +85,7 @@ function setupStyleControls() {
         document.documentElement.style.setProperty('--cv-title-size', value);
         document.documentElement.style.setProperty('--cv-section-title-size', value);
         document.getElementById('titleSizeValue').textContent = value;
+        saveStylesToStorage();
     });
 
     textSize.addEventListener('input', (e) => {
@@ -84,22 +94,151 @@ function setupStyleControls() {
         const contactSize = (parseFloat(e.target.value) * 0.875) + 'rem';
         document.documentElement.style.setProperty('--cv-contact-size', contactSize);
         document.getElementById('textSizeValue').textContent = value;
+        saveStylesToStorage();
     });
 
     accentColor.addEventListener('input', (e) => {
         document.documentElement.style.setProperty('--cv-accent-color', e.target.value);
         document.documentElement.style.setProperty('--cv-title-color', e.target.value);
+        saveStylesToStorage();
     });
 
     nameColor.addEventListener('input', (e) => {
         document.documentElement.style.setProperty('--cv-name-color', e.target.value);
         document.documentElement.style.setProperty('--cv-section-color', e.target.value);
+        saveStylesToStorage();
     });
 
     textColor.addEventListener('input', (e) => {
         document.documentElement.style.setProperty('--cv-text-color', e.target.value);
+        saveStylesToStorage();
     });
 }
+
+// ============================================
+// SISTEMA DE PERSISTENCIA CON LOCALSTORAGE
+// ============================================
+
+// Crear indicador de guardado
+function createSaveIndicator() {
+    const indicator = document.createElement('div');
+    indicator.id = 'saveIndicator';
+    indicator.className = 'save-indicator';
+    indicator.innerHTML = `
+        <svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="20 6 9 17 4 12"></polyline>
+        </svg>
+        <span>Guardado automáticamente</span>
+    `;
+    document.body.appendChild(indicator);
+}
+
+// Mostrar indicador de guardado
+function showSaveIndicator() {
+    const indicator = document.getElementById('saveIndicator');
+    if (indicator) {
+        indicator.classList.add('show');
+        setTimeout(() => {
+            indicator.classList.remove('show');
+        }, 2000);
+    }
+}
+
+// Guardar datos en localStorage con debounce
+function saveToStorage() {
+    // Cancelar guardado anterior si existe
+    if (saveTimeout) {
+        clearTimeout(saveTimeout);
+    }
+
+    // Guardar después de 500ms de inactividad
+    saveTimeout = setTimeout(() => {
+        try {
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(cvData));
+            showSaveIndicator();
+        } catch (error) {
+            console.error('Error al guardar en localStorage:', error);
+        }
+    }, 500);
+}
+
+// Guardar estilos en localStorage
+function saveStylesToStorage() {
+    try {
+        const styles = {
+            nameSize: document.getElementById('nameSize').value,
+            titleSize: document.getElementById('titleSize').value,
+            textSize: document.getElementById('textSize').value,
+            accentColor: document.getElementById('accentColor').value,
+            nameColor: document.getElementById('nameColor').value,
+            textColor: document.getElementById('textColor').value
+        };
+        localStorage.setItem(STORAGE_STYLES_KEY, JSON.stringify(styles));
+        showSaveIndicator();
+    } catch (error) {
+        console.error('Error al guardar estilos:', error);
+    }
+}
+
+// Cargar datos desde localStorage
+function loadFromStorage() {
+    try {
+        const savedData = localStorage.getItem(STORAGE_KEY);
+        if (savedData) {
+            cvData = JSON.parse(savedData);
+        }
+
+        const savedStyles = localStorage.getItem(STORAGE_STYLES_KEY);
+        if (savedStyles) {
+            const styles = JSON.parse(savedStyles);
+
+            // Aplicar estilos guardados
+            document.documentElement.style.setProperty('--cv-name-size', styles.nameSize + 'rem');
+            document.documentElement.style.setProperty('--cv-title-size', styles.titleSize + 'rem');
+            document.documentElement.style.setProperty('--cv-section-title-size', styles.titleSize + 'rem');
+            document.documentElement.style.setProperty('--cv-text-size', styles.textSize + 'rem');
+
+            const contactSize = (parseFloat(styles.textSize) * 0.875) + 'rem';
+            document.documentElement.style.setProperty('--cv-contact-size', contactSize);
+
+            document.documentElement.style.setProperty('--cv-accent-color', styles.accentColor);
+            document.documentElement.style.setProperty('--cv-title-color', styles.accentColor);
+            document.documentElement.style.setProperty('--cv-name-color', styles.nameColor);
+            document.documentElement.style.setProperty('--cv-section-color', styles.nameColor);
+            document.documentElement.style.setProperty('--cv-text-color', styles.textColor);
+
+            // Actualizar valores de los controles
+            setTimeout(() => {
+                document.getElementById('nameSize').value = styles.nameSize;
+                document.getElementById('titleSize').value = styles.titleSize;
+                document.getElementById('textSize').value = styles.textSize;
+                document.getElementById('accentColor').value = styles.accentColor;
+                document.getElementById('nameColor').value = styles.nameColor;
+                document.getElementById('textColor').value = styles.textColor;
+
+                document.getElementById('nameSizeValue').textContent = styles.nameSize + 'rem';
+                document.getElementById('titleSizeValue').textContent = styles.titleSize + 'rem';
+                document.getElementById('textSizeValue').textContent = styles.textSize + 'rem';
+            }, 0);
+        }
+    } catch (error) {
+        console.error('Error al cargar desde localStorage:', error);
+    }
+}
+
+// Limpiar datos guardados
+function clearStorage() {
+    if (confirm('¿Estás seguro de que quieres borrar todos los datos guardados?')) {
+        localStorage.removeItem(STORAGE_KEY);
+        localStorage.removeItem(STORAGE_STYLES_KEY);
+        location.reload();
+    }
+}
+
+// ============================================
+// FIN SISTEMA DE PERSISTENCIA
+// ============================================
+
 
 // Restaurar estilos por defecto
 function resetStyles() {
@@ -166,6 +305,7 @@ function renderExperiencia() {
 function updateExperiencia(index, field, value) {
     cvData.experiencia[index][field] = value;
     renderPreview();
+    saveToStorage();
 }
 
 function addExperiencia() {
@@ -177,12 +317,14 @@ function addExperiencia() {
     });
     renderExperiencia();
     renderPreview();
+    saveToStorage();
 }
 
 function removeExperiencia(index) {
     cvData.experiencia.splice(index, 1);
     renderExperiencia();
     renderPreview();
+    saveToStorage();
 }
 
 // Renderizar educación
@@ -210,6 +352,7 @@ function renderEducacion() {
 function updateEducacion(index, field, value) {
     cvData.educacion[index][field] = value;
     renderPreview();
+    saveToStorage();
 }
 
 function addEducacion() {
@@ -220,12 +363,14 @@ function addEducacion() {
     });
     renderEducacion();
     renderPreview();
+    saveToStorage();
 }
 
 function removeEducacion(index) {
     cvData.educacion.splice(index, 1);
     renderEducacion();
     renderPreview();
+    saveToStorage();
 }
 
 // Renderizar habilidades
@@ -248,18 +393,21 @@ function renderHabilidades() {
 function updateHabilidad(index, value) {
     cvData.habilidades[index] = value;
     renderPreview();
+    saveToStorage();
 }
 
 function addHabilidad() {
     cvData.habilidades.push('Nueva habilidad');
     renderHabilidades();
     renderPreview();
+    saveToStorage();
 }
 
 function removeHabilidad(index) {
     cvData.habilidades.splice(index, 1);
     renderHabilidades();
     renderPreview();
+    saveToStorage();
 }
 
 // Renderizar vista previa

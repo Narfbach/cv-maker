@@ -942,3 +942,115 @@ body::before {
         margin-bottom: 1.5cm;
     }
 }
+
+/* ============================================ */
+/* INDICADOR DE GUARDADO AUTOMÁTICO */
+/* ============================================ */
+
+.save-indicator {
+    position: fixed;
+    bottom: 2rem;
+    right: 2rem;
+    background: linear-gradient(135deg, var(--retro-green) 0%, var(--retro-teal) 100%);
+    color: var(--retro-cream);
+    padding: 1rem 1.5rem;
+    border: 4px solid var(--retro-brown);
+    font-family: 'Orbitron', monospace;
+    font-size: 0.9rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    z-index: 1000;
+    opacity: 0;
+    transform: translateX(400px);
+    transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    pointer-events: none;
+    clip-path: polygon(0 8px, 8px 0,
+            calc(100% - 8px) 0, 100% 8px,
+            100% calc(100% - 8px), calc(100% - 8px) 100%,
+            8px 100%, 0 calc(100% - 8px));
+    box-shadow:
+        6px 6px 0px var(--retro-brown),
+        inset 2px 2px 0px rgba(255, 255, 255, 0.3),
+        inset -2px -2px 0px rgba(0, 0, 0, 0.2);
+}
+
+.save-indicator::before {
+    content: '';
+    position: absolute;
+    top: 4px;
+    left: 4px;
+    right: 4px;
+    bottom: 4px;
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    pointer-events: none;
+}
+
+.save-indicator::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: repeating-linear-gradient(90deg,
+            transparent,
+            transparent 2px,
+            rgba(0, 0, 0, 0.05) 2px,
+            rgba(0, 0, 0, 0.05) 4px);
+    pointer-events: none;
+}
+
+.save-indicator.show {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+.save-indicator svg {
+    color: var(--retro-cream);
+    filter: drop-shadow(1px 1px 0px var(--retro-brown));
+    position: relative;
+    z-index: 1;
+}
+
+.save-indicator span {
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    text-shadow: 1px 1px 0px var(--retro-brown);
+    position: relative;
+    z-index: 1;
+}
+
+/* Animación de pulso para el ícono */
+@keyframes checkPulse {
+    0% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(1.2);
+    }
+
+    100% {
+        transform: scale(1);
+    }
+}
+
+.save-indicator.show svg {
+    animation: checkPulse 0.5s ease-in-out;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .save-indicator {
+        bottom: 1rem;
+        right: 1rem;
+        padding: 0.75rem 1rem;
+        font-size: 0.8rem;
+    }
+
+    .save-indicator span {
+        display: none;
+    }
+}
