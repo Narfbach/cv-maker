@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Generador de CV Profesional</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <div class="container">
+        <!-- GitHub Button -->
+        <a href="https://github.com/Narfbach" target="_blank" class="github-btn" title="Ver en GitHub">
+            <svg class="github-icon" viewBox="0 0 24 24" fill="currentColor">
+                <path
+                    d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z" />
+            </svg>
+        </a>
+
+        <!-- Header -->
+        <div class="header-card">
+            <h1 class="logo">
+                <span class="logo-cv">CV</span>
+                <span class="logo-maker">MAKER</span>
+            </h1>
+        </div>
+
+        <div class="main-grid">
+            <!-- EDITOR -->
+            <div class="editor-section">
+                <!-- Información Personal -->
+                <div class="card">
+                    <h2 class="card-title">
+                        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                            <circle cx="12" cy="7" r="4"></circle>
+                        </svg>
+                        Información Personal
+                    </h2>
+
+                    <input type="text" id="nombre" class="input-lg" placeholder="Nombre completo"
+                        value="Tu Nombre Completo">
+                    <input type="text" id="titulo" class="input" placeholder="Título profesional"
+                        value="Tu Título Profesional">
+                    <input type="email" id="email" class="input" placeholder="Email" value="tu@email.com">
+                    <input type="tel" id="telefono" class="input" placeholder="Teléfono" value="+54 9 11 1234-5678">
+                    <input type="text" id="ubicacion" class="input" placeholder="Ubicación" value="Ciudad, Argentina">
+                    <input type="text" id="github" class="input" placeholder="GitHub (ej: github.com/tuusuario)"
+                        value="">
+                    <input type="text" id="linkedin" class="input"
+                        placeholder="LinkedIn (ej: linkedin.com/in/tuusuario)" value="">
+                    <input type="text" id="portfolio" class="input" placeholder="Portfolio / Sitio Web (opcional)"
+                        value="">
+                </div>
+
+                <!-- Perfil -->
+                <div class="card">
+                    <h2 class="card-title">Perfil</h2>
+                    <textarea id="resumen" class="textarea"
+                        placeholder="Describe tu perfil profesional...">Breve descripción profesional que destaque tus fortalezas y objetivos.</textarea>
+                </div>
+
+                <!-- Experiencia -->
+                <div class="card">
+                    <h2 class="card-title">
+                        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect>
+                            <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path>
+                        </svg>
+                        Experiencia
+                    </h2>
+                    <div id="experienciaList"></div>
+                    <button class="btn-success" onclick="addExperiencia()">
+                        <svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <line x1="12" y1="5" x2="12" y2="19"></line>
+                            <line x1="5" y1="12" x2="19" y2="12"></line>
+                        </svg>
+                        Agregar Experiencia
+                    </button>
+                </div>
+
+                <!-- Educación -->
+                <div class="card">
+                    <h2 class="card-title">
+                        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M22 10v6M2 10l10-5 10 5-10 5z"></path>
+                            <path d="M6 12v5c3 3 9 3 12 0v-5"></path>
+                        </svg>
+                        Educación
+                    </h2>
+                    <div id="educacionList"></div>
+                    <button class="btn-success" onclick="addEducacion()">
+                        <svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <line x1="12" y1="5" x2="12" y2="19"></line>
+                            <line x1="5" y1="12" x2="19" y2="12"></line>
+                        </svg>
+                        Agregar Educación
+                    </button>
+                </div>
+
+                <!-- Habilidades -->
+                <div class="card">
+                    <h2 class="card-title">
+                        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path
+                                d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z">
+                            </path>
+                        </svg>
+                        Habilidades
+                    </h2>
+                    <div id="habilidadesList"></div>
+                    <button class="btn-success" onclick="addHabilidad()">
+                        <svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <line x1="12" y1="5" x2="12" y2="19"></line>
+                            <line x1="5" y1="12" x2="19" y2="12"></line>
+                        </svg>
+                        Agregar Habilidad
+                    </button>
+                </div>
+
+                <!-- Personalización de Estilos -->
+                <div class="card">
+                    <h2 class="card-title">
+                        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="3"></circle>
+                            <path
+                                d="M12 1v6m0 6v6M5.64 5.64l4.24 4.24m4.24 4.24l4.24 4.24M1 12h6m6 0h6M5.64 18.36l4.24-4.24m4.24-4.24l4.24-4.24">
+                            </path>
+                        </svg>
+                        Personalización de Estilos
+                    </h2>
+
+                    <div class="style-controls">
+                        <div class="style-group">
+                            <label class="style-label">Tamaño Nombre:</label>
+                            <input type="range" id="nameSize" min="1.5" max="4" step="0.1" value="2.5" class="slider">
+                            <span id="nameSizeValue">2.5rem</span>
+                        </div>
+
+                        <div class="style-group">
+                            <label class="style-label">Tamaño Título:</label>
+                            <input type="range" id="titleSize" min="0.8" max="2" step="0.05" value="1.25"
+                                class="slider">
+                            <span id="titleSizeValue">1.25rem</span>
+                        </div>
+
+                        <div class="style-group">
+                            <label class="style-label">Tamaño Texto:</label>
+                            <input type="range" id="textSize" min="0.7" max="1.5" step="0.05" value="1" class="slider">
+                            <span id="textSizeValue">1rem</span>
+                        </div>
+
+                        <div class="style-group">
+                            <label class="style-label">Color Principal:</label>
+                            <input type="color" id="accentColor" value="#2563eb" class="color-picker">
+                        </div>
+
+                        <div class="style-group">
+                            <label class="style-label">Color Nombre:</label>
+                            <input type="color" id="nameColor" value="#111827" class="color-picker">
+                        </div>
+
+                        <div class="style-group">
+                            <label class="style-label">Color Texto:</label>
+                            <input type="color" id="textColor" value="#374151" class="color-picker">
+                        </div>
+
+                        <button class="btn-primary" onclick="resetStyles()" style="margin-top: 1rem;">
+                            Restaurar Estilos por Defecto
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- PREVIEW -->
+            <div class="preview-section" id="previewSection">
+                <div class="preview-sticky">
+                    <div class="cv-preview" id="cvPreview">
+                        <!-- El CV se genera aquí dinámicamente -->
+                    </div>
+                    <button class="btn-print" onclick="printCV()">Imprimir / Guardar como PDF</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+
+</html>
